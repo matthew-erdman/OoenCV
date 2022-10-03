@@ -3,13 +3,23 @@ import argparse
 import cv2
 
 def main():
-    # Build argument parser and load image from user
-    ap = argparse.ArgumentParser()
-    ap.add_argument("-i", "--image", required=True, help="Path to the image")
-    args = vars(ap.parse_args())
-    image = cv2.imread(args["image"])
+    # initialize video capture device
+    video = cv2.VideoCapture(0)
 
-    cv2.imshow("Image", image)
-    cv2.waitKey(0)
+    # video loop
+    while (True):
+
+        ret, frame = video.read()
+        if not ret:
+            print("No frame received")
+            break
+
+        cv2.imshow('Cards', frame)
+        if cv2.waitKey(1) != -1:
+            break
+
+    video.release()
+    cv2.destroyAllWindows()
+
 
 main()
