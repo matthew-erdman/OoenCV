@@ -47,7 +47,7 @@ def readCards(frame, cnts):
         # parse ocr results
         if "A" in char:
             char = "Ace"
-        elif "J" in char:
+        elif "J" in char or "j" in char:
             char = "Jack"
         elif "Q" in char:
             char = "Queen"
@@ -57,8 +57,8 @@ def readCards(frame, cnts):
             char = "10"
         cards.append(char)
 
-        cv2.imshow("straightened " + str(i), straightened)
-        cv2.imshow("roi " + str(i), roi)
+        cv2.imshow("Straightened: " + str(i), straightened)
+        cv2.imshow("Roi: " + str(i), roi)
 
     return cards
 
@@ -98,9 +98,8 @@ def main():
             print("No frame received from camera - exiting...")
             break
 
-        keypress = cv2.waitKey(1)
-
         cv2.imshow('Video', frame)
+        keypress = cv2.waitKey(1)
 
         # analyze selected frame
         if keypress == ord(" "):
