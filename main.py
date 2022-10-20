@@ -15,8 +15,6 @@ def straightenCard(c, frame):
     dst = np.array([[0, 0], [w - 1, 0], [w - 1, h - 1], [0, h - 1]], dtype="float32")
     straightenedMatrix = cv2.getPerspectiveTransform(box, dst)
     straightened = cv2.warpPerspective(frame, straightenedMatrix, (w, h))
-    w = straightened.shape[0]
-    h = straightened.shape[1]
 
     # fix cards straightened with an angle less than 45 degrees
     if bounding[2] < 45.0:
@@ -34,14 +32,14 @@ def readCards(frame, cnts):
         w = straightened.shape[1]
 
         # focus on top left rank
-        roi = straightened[0:int(h*0.3), 0:int(w*0.2)]
+        roi = straightened[0:int(h*0.2), 0:int(w*0.2)]
 
         # attempt single character ocr with whitelist
         char = pytesseract.image_to_string(roi, config="--psm 10 -c tessedit_char_whitelist=0123456789AJQK").strip()
 
         # no valid character found in top left, fallback to top right
         if not char:
-            roi = straightened[0:int(h * 0.3), int(w * 0.8):w]
+            roi = straightened[0:int(h * 0.2), int(w * 0.8):w]
             char = pytesseract.image_to_string(roi, config="--psm 10 -c tessedit_char_whitelist=0123456789AJQK").strip()
 
         # parse ocr results
@@ -58,7 +56,7 @@ def readCards(frame, cnts):
         cards.append(char)
 
         cv2.imshow("Straightened: " + str(i), straightened)
-        cv2.imshow("Roi: " + str(i), roi)
+        cv2.imshow("ROI: " + str(i), roi)
 
     return cards
 
